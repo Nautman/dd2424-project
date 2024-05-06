@@ -1,4 +1,5 @@
 import os
+import shutil
 
 DATA_DIR = "oxford-iiit-pet"
 IMAGE_DATA_PATH = os.path.join(DATA_DIR, "images")
@@ -18,8 +19,17 @@ def main():
         # Replace und
         name = name.split('_')[:-1]
         name = ' '.join(name)
-        if name in cats_lower:
-            # Move img_name to cats/${img_name}
+        if name.lower() in cats_lower:
+            # Copy img_name to cats folder
+            shutil.copy(os.path.join(IMAGE_DATA_PATH, img_name), os.path.join(CATS_OR_DOGS, "cats", img_name))
+        elif name.lower() in dogs_lower:
+            # Copy img_name to dogs folder
+            shutil.copy(os.path.join(IMAGE_DATA_PATH, img_name), os.path.join(CATS_OR_DOGS, "dogs", img_name))
+        else:
+            print(f"Unknown category for image: {img_name}")
+    
+
+            
             
             
 

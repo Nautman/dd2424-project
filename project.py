@@ -1,41 +1,52 @@
 import torch
-import torch.nn as nn
 from torchvision import datasets, transforms 
 from torchvision.models import resnet18, ResNet18_Weights
-import os
+from tempfile import TemporaryDirectory
+from matplotlib import pyplot as plt
+import torch.nn as nn
+import torch.utils.data
+import numpy as np
+import os, time
+
 
 # torch.utils.data.DataLoader()
 DATA_DIR = "oxford-iiit-pet"
 IMAGE_DATA_PATH = os.path.join(DATA_DIR, "images")
+CATS_OR_DOGS = os.path.join(DATA_DIR, "cats-or-dogs")
 
 # Use pre-trained ResNet18 model from torchvision
 # Replace the last layer with 
 
-train_transform = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.ToTensor(), 
-    transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),  
-])
+def show(img):
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)), interpolation='nearest')
 
-resnet = resnet18(pretrained=True)
-resnet.fc = nn.Linear(512, 2)
+def main():
+    train_transform = transforms.Compose([
+        # transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(), 
+        # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),  
+    ])
 
-train_data = datasets.ImageFolder(IMAGE_DATA_PATH, transform=train_transform)
+    resnet = resnet18(weights=ResNet18_Weights.DEFAULT)
+    resnet.fc = nn.Linear(512, 2)
 
-print(resnet.fc)
+    # Split the data into training, validation, and test sets
+    # 70% train, 20% validation, 10% test
+    train_dataset = datasets.ImageFolder(CATS_OR_DOGS, transform=train_transform)
+    train_size = int(0.7 * len(train_dataset))
+    val_size = int(0.2 * len(train_dataset))
+    test_size = len(train_dataset) - train_size - val_size
+    train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(train_dataset, [train_size, val_size, test_size])
 
-criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(resnet.parameters(), lr=0.001, momentum=0.9)
-
-cats = ['Abyssinian', 'Bengal', 'Birman', 'Bombay', 'British Shorthair', 'Egyptian Mau', 'Main Coon', 'Persian', 'Ragdoll', 'Russian Blue', 'Siamese', 'Sphynx']
-dogs = ['American Bulldog', 'American Pit Bull Terrier', 'Basset Hound', 'Beagle', 'Boxer', 'Chihuahua', 'English Cocker Spaniel', 'English Setter', 'German Shorthaired', 'Great Pyrenees', 'Havanese', 'Japanese Chin', 'Keeshond', 'Leonberger', 'Miniature Pinscher', 'Newfoundland', 'Pomeranian', 'Pug', 'Saint Bernard', 'Samyoed', 'Scottish Terrier', 'Shiba Inu', 'Staffordshire Bull Terrier', 'Wheaten Terrier', 'Yorkshire Terrier']
-
-
-
-cat = 
-
+    print(len(train_dataset), len(val_dataset), len(test_dataset))
 
 def train_model(model, criterion, optimizer, scheduler=0, num_epochs=25):
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
     since = time.time()
 
     # Create a temporary directory to save training checkpoints
@@ -107,8 +118,9 @@ def train_model(model, criterion, optimizer, scheduler=0, num_epochs=25):
 
 
 
-resnet = train_model(model, criterion, optimizer,
-                       num_epochs=20)
+# resnet = train_model(model, criterion, optimizer,
+#                        num_epochs=20)
 
-
+if __name__ == "__main__":
+    main()
 
