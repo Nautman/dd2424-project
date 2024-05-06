@@ -1,5 +1,7 @@
 oxford-iiit-pet/
 
+oxford-iiit-pet-copy/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
