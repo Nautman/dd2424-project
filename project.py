@@ -19,6 +19,7 @@ CATS_OR_DOGS = os.path.join(DATA_DIR, "cats-or-dogs")
 def show(img):
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)), interpolation='nearest')
+    plt.show()
 
 def main():
     train_transform = transforms.Compose([
@@ -44,9 +45,9 @@ def main():
     train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(train_dataset, [train_size, val_size, test_size])
 
     dataloaders = {
-        'train': torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True),
-        'test': torch.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=True),
-        'val': torch.utils.data.DataLoader(val_dataset, batch_size=16, shuffle=True),
+        'train': torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True),
+        'test': torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=True),
+        'val': torch.utils.data.DataLoader(val_dataset, batch_size=32, shuffle=True),
     }
 
     dataset_sizes = {
@@ -55,10 +56,16 @@ def main():
         'val': len(val_dataset),
     }
 
+    # for i in range(20):
+    #     show(dataloaders['train'].dataset[i][0])
+    #     print(dataloaders['train'].dataset[i][1])
+
     # print(len(train_dataset), len(val_dataset), len(test_dataset))
 
     train_model(resnet, dataloaders, dataset_sizes)
-
+    # optimizer = torch.optim.Adam(resnet.parameters(), lr=0.001)
+    # loss_fn = nn.BCELoss()
+    # train2(resnet, optimizer, loss_fn, dataloaders['train'], dataloaders['val'])
 
 
 def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
@@ -105,8 +112,12 @@ def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
                         outputs = model(inputs) # forward pass
                         # make labels one dimension higher
                         labels = labels.unsqueeze(1).float()
-                        _, preds = torch.max(outputs, 1)
+                        preds = (outputs > 0.5).float()
+
                         loss = criterion(outputs, labels)
+
+                        print('preds', preds)
+                        print('labels.data', labels.data)
 
                         # backward + optimize only if in training phase
                         if phase == 'train':
@@ -137,10 +148,55 @@ def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
         model.load_state_dict(torch.load(best_model_params_path))
     return model
 
+@torch.no_grad()
+def accuracy(x, y, model):
+    model.eval()
+    prediction = model(x)
+    is_correct = (prediction > 0.5) == y
+    return is_correct.cpu().numpy().tolist()
 
+def train_batch(x, y, model, opt, loss_fn):
+    model.train()
+    prediction = model(x)
+    batch_loss = loss_fn(prediction, y)
+    batch_loss.backward()
+    opt.step()
+    opt.zero_grad()
+    return batch_loss.item()
 
-# resnet = train_model(model, criterion, optimizer,
-#                        num_epochs=20)
+def train2(model, optimizer, loss_fn, trn_dl, val_dl):
+    train_losses, train_accuracies = [], []
+    val_accuracies = []
+
+    print("All losses and accuracies are for each epoch")
+    for epoch in range(5):
+        
+        train_epoch_losses, train_epoch_accuracies = [], []
+        val_epoch_accuracies = []
+
+        for ix, batch in enumerate(iter(trn_dl)):
+            x, y = batch
+            batch_loss = train_batch(x, y, model, optimizer, loss_fn)
+            train_epoch_losses.append(batch_loss) 
+        train_epoch_loss = np.array(train_epoch_losses).mean()
+
+        for ix, batch in enumerate(iter(trn_dl)):
+            x, y = batch
+            is_correct = accuracy(x, y, model)
+            train_epoch_accuracies.extend(is_correct)
+        train_epoch_accuracy = np.mean(train_epoch_accuracies)
+
+        for ix, batch in enumerate(iter(val_dl)):
+            x, y = batch
+            val_is_correct = accuracy(x, y, model)
+            val_epoch_accuracies.extend(val_is_correct)
+        val_epoch_accuracy = np.mean(val_epoch_accuracies)
+
+        print(f" epoch {epoch + 1}/5, Training Loss: {train_epoch_loss}, Training Accuracy: {train_epoch_accuracy}, Validation Accuracy: {val_epoch_accuracy}")
+        train_losses.append(train_epoch_loss)
+        train_accuracies.append(train_epoch_accuracy)
+        val_accuracies.append(val_epoch_accuracy)
+
 
 if __name__ == "__main__":
     main()
