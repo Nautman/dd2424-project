@@ -1,4 +1,3 @@
-import torch
 from torchvision import datasets, transforms 
 from torchvision.models import resnet18, ResNet18_Weights
 from tempfile import TemporaryDirectory
@@ -25,11 +24,16 @@ def main():
     train_transform = transforms.Compose([
         # transforms.RandomHorizontalFlip(),
         transforms.ToTensor(), 
-        # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),  
+        transforms.Resize((224, 224)),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
     ])
 
     resnet = resnet18(weights=ResNet18_Weights.DEFAULT)
-    resnet.fc = nn.Linear(512, 2)
+    # fc = Final fully connected layer
+    resnet.fc = nn.Sequential(
+        nn.Linear(512, 1),
+        nn.Sigmoid()
+    )
 
     # Split the data into training, validation, and test sets
     # 70% train, 20% validation, 10% test
@@ -39,12 +43,29 @@ def main():
     test_size = len(train_dataset) - train_size - val_size
     train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(train_dataset, [train_size, val_size, test_size])
 
-    print(len(train_dataset), len(val_dataset), len(test_dataset))
+    dataloaders = {
+        'train': torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True),
+        'test': torch.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=True),
+        'val': torch.utils.data.DataLoader(val_dataset, batch_size=16, shuffle=True),
+    }
 
-def train_model(model, criterion, optimizer, scheduler=0, num_epochs=25):
+    dataset_sizes = {
+        'train': len(train_dataset),
+        'test': len(test_dataset),
+        'val': len(val_dataset),
+    }
+
+    # print(len(train_dataset), len(val_dataset), len(test_dataset))
+
+    train_model(resnet, dataloaders, dataset_sizes)
+
+
+
+def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.BCELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     since = time.time()
@@ -81,7 +102,9 @@ def train_model(model, criterion, optimizer, scheduler=0, num_epochs=25):
                     # forward
                     # track history if only in train
                     with torch.set_grad_enabled(phase == 'train'):
-                        outputs = model(inputs)
+                        outputs = model(inputs) # forward pass
+                        # make labels one dimension higher
+                        labels = labels.unsqueeze(1).float()
                         _, preds = torch.max(outputs, 1)
                         loss = criterion(outputs, labels)
 
@@ -105,8 +128,6 @@ def train_model(model, criterion, optimizer, scheduler=0, num_epochs=25):
                 if phase == 'val' and epoch_acc > best_acc:
                     best_acc = epoch_acc
                     torch.save(model.state_dict(), best_model_params_path)
-
-            print()
 
         time_elapsed = time.time() - since
         print(f'Training complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
