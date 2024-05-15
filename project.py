@@ -24,12 +24,29 @@ def show(img):
 def main():
     train_transform = transforms.Compose([
         # transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(), 
-        transforms.Resize((224, 224)),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
     resnet = resnet18(weights=ResNet18_Weights.DEFAULT)
+
+    for param in resnet.parameters():
+        param.requires_grad = False
+
+
+    # resnet.fc = nn.Sequential(
+    #     nn.Flatten(),
+    #     nn.Linear(512, 128),
+    #     nn.ReLU(),
+    #     nn.Dropout(0.2),
+    #     nn.Linear(128, 1),
+    #     nn.Sigmoid()
+    # )
+
+    # Modify the last layer of the model
+
     # fc = Final fully connected layer
     resnet.fc = nn.Sequential(
         nn.Linear(512, 1),
@@ -42,7 +59,7 @@ def main():
     train_size = int(0.7 * len(train_dataset))
     val_size = int(0.2 * len(train_dataset))
     test_size = len(train_dataset) - train_size - val_size
-    train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(train_dataset, [train_size, val_size, test_size])
+    train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(train_dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42))
 
     dataloaders = {
         'train': torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True),
@@ -56,33 +73,50 @@ def main():
         'val': len(val_dataset),
     }
 
-    # for i in range(20):
-    #     show(dataloaders['train'].dataset[i][0])
-    #     print(dataloaders['train'].dataset[i][1])
+    test_model(resnet, dataloaders['test'], 'best_model_params.pt')
 
-    # print(len(train_dataset), len(val_dataset), len(test_dataset))
+    # train_model(resnet, dataloaders, dataset_sizes)
 
-    train_model(resnet, dataloaders, dataset_sizes)
-    # optimizer = torch.optim.Adam(resnet.parameters(), lr=0.001)
-    # loss_fn = nn.BCELoss()
-    # train2(resnet, optimizer, loss_fn, dataloaders['train'], dataloaders['val'])
+def test_model(model, test_data, weights_path, device_type='mps'):
+    device = torch.device(device_type)
+    model.load_state_dict(torch.load(weights_path))
+    model = model.to(device)
+    with torch.no_grad():
+        model.eval()
+        correct = 0
+        total = 0
+        for images, labels in test_data:
+            images = images.to(device)
+            labels = labels.to(device)
+
+            outputs = model(images)
+
+            labels = labels.unsqueeze(1).float()
+            predicted = (outputs > 0.5).float()
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+        print(f'Accuracy of the network on the test images: {100 * correct / total}%')
 
 
 def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device("mps")
+    model = model.to(device)
 
     # criterion = nn.CrossEntropyLoss()
     criterion = nn.BCELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.fc.parameters(), lr=0.001)
 
     since = time.time()
 
-    # Create a temporary directory to save training checkpoints
+    # Create a directory to save training checkpoints
     with TemporaryDirectory() as tempdir:
-        best_model_params_path = os.path.join(tempdir, 'best_model_params.pt')
+        best_model_params_path = os.path.join("./", 'best_model_params.pt')
 
         torch.save(model.state_dict(), best_model_params_path)
         best_acc = 0.0
+
+        start = time.time()
 
         for epoch in range(num_epochs):
             print(f'Epoch {epoch}/{num_epochs - 1}')
@@ -90,10 +124,7 @@ def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
 
             # Each epoch has a training and validation phase
             for phase in ['train', 'val']:
-                if phase == 'train':
-                    model.train()  # Set model to training mode
-                else:
-                    model.eval()   # Set model to evaluate mode
+                model.train() if phase == 'train' else model.eval()
 
                 running_loss = 0.0
                 running_corrects = 0
@@ -116,9 +147,6 @@ def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
 
                         loss = criterion(outputs, labels)
 
-                        print('preds', preds)
-                        print('labels.data', labels.data)
-
                         # backward + optimize only if in training phase
                         if phase == 'train':
                             loss.backward()
@@ -127,11 +155,9 @@ def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
                     # statistics
                     running_loss += loss.item() * inputs.size(0)
                     running_corrects += torch.sum(preds == labels.data)
-                #if phase == 'train':
-                #    scheduler.step()
 
                 epoch_loss = running_loss / dataset_sizes[phase]
-                epoch_acc = running_corrects.double() / dataset_sizes[phase]
+                epoch_acc = running_corrects / dataset_sizes[phase]
 
                 print(f'{phase} Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
 
@@ -139,6 +165,10 @@ def train_model(model, dataloaders, dataset_sizes, scheduler=0, num_epochs=25):
                 if phase == 'val' and epoch_acc > best_acc:
                     best_acc = epoch_acc
                     torch.save(model.state_dict(), best_model_params_path)
+            print('epoch took:', time.time() - start)
+            start = time.time()
+
+
 
         time_elapsed = time.time() - since
         print(f'Training complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
