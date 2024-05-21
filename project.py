@@ -22,10 +22,17 @@ def show(img):
     plt.imshow(np.transpose(npimg, (1, 2, 0)), interpolation='nearest')
     plt.show()
 
-def test_model(model, test_data, weights_path, device_type='mps'):
+def test_model(model, test_data, weights_path, device_type='cpu'):
+    if torch.cuda.is_available():
+        device_type = 'cuda:0'
+    elif torch.backends.mps.is_available():
+        device_type = 'mps'
+
     device = torch.device(device_type)
     model.load_state_dict(torch.load(weights_path))
     model = model.to(device)
+
+    start = time.time()
     with torch.no_grad():
         model.eval()
         correct = 0
@@ -36,16 +43,21 @@ def test_model(model, test_data, weights_path, device_type='mps'):
 
             outputs = model(images)
 
-            labels = labels.unsqueeze(1).float()
-            predicted = (outputs > 0.5).float()
+            predicted = torch.argmax(outputs, 1)
+
             total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+            correct += torch.sum(predicted == labels.data)
+        print('Time taken:', time.time() - start)
         print(f'Accuracy of the network on the test images: {100 * correct / total}%')
 
 
-def train_model(model, dataloaders, dataset_sizes, suffix, scheduler=0, num_epochs=25):
-    # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    device = torch.device("mps")
+def train_model(model, dataloaders, dataset_sizes, suffix, scheduler=0, num_epochs=25, device_type='cpu'):
+    if torch.cuda.is_available():
+        device_type = 'cuda:0'
+    elif torch.backends.mps.is_available():
+        device_type = 'mps'
+
+    device = torch.device(device_type)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
@@ -86,16 +98,15 @@ def train_model(model, dataloaders, dataset_sizes, suffix, scheduler=0, num_epoc
                     # forward
                     # track history if only in train
                     with torch.set_grad_enabled(phase == 'train'):
-                        # 32 * 37
                         outputs = model(inputs) # forward pass
-                        # outputs is probability of each class
-                        # create preds by thresholding outputs
 
-                        # make labels one dimension higher
-                        # labels = labels.unsqueeze(1).float()
+                        # outputs is probability of each class
                         # labels needs to be probability of each class
+
+                        # we need the one-hot for the labels to get the loss
                         true_outputs = torch.nn.functional.one_hot(labels, num_classes=37).float()
 
+                        # create preds by thresholding outputs
                         loss = criterion(outputs, true_outputs)
 
                         preds = torch.argmax(outputs, 1)
@@ -156,7 +167,6 @@ def generate_datasets_binary(
     )
 
     # Split the data into training, validation, and test sets
-    train_dataset = datasets.ImageFolder(CATS_OR_DOGS, transform=train_transform)
     train_size = int(train_split * len(train_dataset))
     val_size = int(val_split * len(train_dataset))
     test_size = len(train_dataset) - train_size - val_size
@@ -176,7 +186,7 @@ def generate_datasets_binary(
 
     return dataloaders, dataset_sizes
 
-def generate_datasets_multi_class(
+def generate_datasets(
         # 70% train, 20% validation, 10% test
         train_split=0.7, val_split=0.2, crop=True, random_flip=False,
     ):
@@ -199,7 +209,7 @@ def generate_datasets_multi_class(
         transform_list
     )
 
-    dataset = OxfordIIITPet(root="./", download=True, target_types='category', transform=train_transform)
+    dataset=OxfordIIITPet(root="./", download=True, target_types='category', transform=train_transform)
 
     # Split the data into training, validation, and test sets
     train_dataset = dataset
@@ -221,12 +231,11 @@ def generate_datasets_multi_class(
 
     return dataloaders, dataset_sizes
 
-def createResnetForBinary():
+def binary_resnet():
     resnet = resnet18(weights=ResNet18_Weights.DEFAULT)
 
     for param in resnet.parameters():
         param.requires_grad = False
-
 
     # resnet.fc = nn.Sequential(
     #     nn.Flatten(),
@@ -247,12 +256,10 @@ def createResnetForBinary():
     
     return resnet
 
-def createResnetForMultiClass(
-    resnetSize="18"
-):
-    if resnetSize == "18":
+def multiclass_resnet(resnet_size="18"):
+    if resnet_size == "18":
         resnet = resnet18(weights=ResNet18_Weights.DEFAULT)
-    elif resnetSize == "50":
+    elif resnet_size == "50":
         resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
     
     for param in resnet.parameters():
@@ -276,36 +283,40 @@ def createResnetForMultiClass(
 
 def create_suffix(
         crop=True, random_flip=False,
-        resnetSize="18",
+        resnet_size="18",
     ):
     suffix = ""
     if crop:
         suffix += "crop"
     if random_flip:
         suffix += "flip"
-    suffix += resnetSize
+    suffix += resnet_size
     return suffix
 
 
 def main():
-    # Print 
-    # dataset = OxfordIIITPet(root="./", target_types='category')
+    # for binary
+    # dataset = datasets.ImageFolder(CATS_OR_DOGS, transform=train_transform)
 
-    dataloaders, dataset_sizes = generate_datasets_multi_class()
+    dataloaders, dataset_sizes = generate_datasets()
 
-    # print(dataloaders)
+    resnet_size = "50"
 
-    resnetSize = "50"
-
-    resnet = createResnetForMultiClass(
-        resnetSize=resnetSize
+    resnet = multiclass_resnet(
+        resnet_size=resnet_size
     )
     suffix = create_suffix(
-        resnetSize=resnetSize
+        resnet_size=resnet_size
     )
 
-    # train_model(resnet, dataloaders, dataset_sizes, suffix)
-    test_model(resnet, dataloaders['test'], suffix + '.pt')
+    print(suffix)
+
+    # train_model(resnet, dataloaders, dataset_sizes, suffix + '-cpu-test', num_epochs=2)
+
+    weights_path = "./" + suffix + '-cpu-test' + ".pt"
+    # weights_path = "./best_model_params_multi.pt"
+
+    test_model(resnet, dataloaders['test'], weights_path, device_type='cpu')
 
 if __name__ == "__main__":
     main()
