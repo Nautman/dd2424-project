@@ -1,0 +1,213 @@
+Sequential(
+  (0): Dropout(p=0.3, inplace=True)
+  (1): Linear(in_features=1280, out_features=1000, bias=True)
+)
+model_name:efficientnet_v2_m;crop:False;random_flip:False;rotate_angle:0;random_resized_crop:False;mps
+Epoch 0/4
+----------
+phase: train
+/Users/douglas/anaconda3/envs/venv/lib/python3.11/site-packages/torch/nn/modules/module.py:1511: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
+  return self._call_impl(*args, **kwargs)
+train Loss: 3.3646 Acc: 0.4057
+phase: val
+val Loss: 3.0983 Acc: 0.6168
+epoch took: 78.92533302307129
+Epoch 1/4
+----------
+phase: train
+train Loss: 3.0302 Acc: 0.6630
+phase: val
+val Loss: 2.9649 Acc: 0.7283
+epoch took: 85.622318983078
+Epoch 2/4
+----------
+phase: train
+train Loss: 2.9365 Acc: 0.7519
+phase: val
+val Loss: 2.9276 Acc: 0.7609
+epoch took: 117.4213137626648
+Epoch 3/4
+----------
+phase: train
+train Loss: 2.8954 Acc: 0.7865
+phase: val
+val Loss: 2.9104 Acc: 0.7772
+epoch took: 114.56469917297363
+Epoch 4/4
+----------
+phase: train
+train Loss: 2.8666 Acc: 0.8121
+phase: val
+val Loss: 2.9030 Acc: 0.7622
+epoch took: 117.75068998336792
+Training complete in 8m 35s
+Best val Acc: 0.777174
+Sequential(
+  (0): Dropout(p=0.3, inplace=True)
+  (1): Linear(in_features=1280, out_features=1000, bias=True)
+)
+model_name:efficientnet_v2_m;crop:True;random_flip:False;rotate_angle:0;random_resized_crop:False;mps
+Epoch 0/4
+----------
+phase: train
+train Loss: 3.2972 Acc: 0.4724
+phase: val
+val Loss: 3.0349 Acc: 0.6739
+epoch took: 119.68500089645386
+Epoch 1/4
+----------
+phase: train
+train Loss: 2.9540 Acc: 0.7376
+phase: val
+val Loss: 2.9471 Acc: 0.7337
+epoch took: 121.63792681694031
+Epoch 2/4
+----------
+phase: train
+train Loss: 2.8851 Acc: 0.8009
+phase: val
+val Loss: 2.8971 Acc: 0.7867
+epoch took: 128.2208287715912
+Epoch 3/4
+----------
+phase: train
+train Loss: 2.8526 Acc: 0.8222
+phase: val
+val Loss: 2.8735 Acc: 0.8030
+epoch took: 126.69382214546204
+Epoch 4/4
+----------
+phase: train
+train Loss: 2.8431 Acc: 0.8273
+phase: val
+val Loss: 2.8738 Acc: 0.7976
+epoch took: 129.6922209262848
+Training complete in 10m 27s
+Best val Acc: 0.802989
+Sequential(
+  (0): Dropout(p=0.3, inplace=True)
+  (1): Linear(in_features=1280, out_features=1000, bias=True)
+)
+model_name:efficientnet_v2_m;crop:False;random_flip:True;rotate_angle:0;random_resized_crop:False;mps
+Epoch 0/4
+----------
+phase: train
+train Loss: 3.3569 Acc: 0.4185
+phase: val
+val Loss: 3.0914 Acc: 0.6399
+epoch took: 127.38400602340698
+Epoch 1/4
+----------
+phase: train
+train Loss: 2.9713 Acc: 0.7442
+phase: val
+val Loss: 2.9347 Acc: 0.7731
+epoch took: 115.63227915763855
+Epoch 2/4
+----------
+phase: train
+train Loss: 2.8848 Acc: 0.8012
+phase: val
+val Loss: 2.8857 Acc: 0.8030
+epoch took: 91.8637068271637
+Epoch 3/4
+----------
+phase: train
+train Loss: 2.8549 Acc: 0.8253
+phase: val
+val Loss: 2.8761 Acc: 0.8111
+epoch took: 95.23461985588074
+Epoch 4/4
+----------
+phase: train
+train Loss: 2.8409 Acc: 0.8385
+phase: val
+val Loss: 2.8629 Acc: 0.8125
+epoch took: 99.80412697792053
+Training complete in 8m 51s
+Best val Acc: 0.812500
+Sequential(
+  (0): Dropout(p=0.3, inplace=True)
+  (1): Linear(in_features=1280, out_features=1000, bias=True)
+)
+model_name:efficientnet_v2_m;crop:False;random_flip:False;rotate_angle:45;random_resized_crop:False;mps
+Epoch 0/4
+----------
+phase: train
+train Loss: 3.3852 Acc: 0.3870
+phase: val
+val Loss: 3.1009 Acc: 0.6372
+epoch took: 131.4508740901947
+Epoch 1/4
+----------
+phase: train
+train Loss: 3.0117 Acc: 0.6949
+phase: val
+val Loss: 2.9359 Acc: 0.7527
+epoch took: 160.95891690254211
+Epoch 2/4
+----------
+phase: train
+train Loss: 2.9372 Acc: 0.7488
+phase: val
+val Loss: 2.9232 Acc: 0.7568
+epoch took: 149.94015192985535
+Epoch 3/4
+----------
+phase: train
+train Loss: 2.9232 Acc: 0.7512
+phase: val
+val Loss: 2.9018 Acc: 0.7826
+epoch took: 137.76671624183655
+Epoch 4/4
+----------
+phase: train
+train Loss: 2.9106 Acc: 0.7655
+phase: val
+val Loss: 2.8905 Acc: 0.7812
+epoch took: 145.18285083770752
+Training complete in 12m 6s
+Best val Acc: 0.782609
+Sequential(
+  (0): Dropout(p=0.3, inplace=True)
+  (1): Linear(in_features=1280, out_features=1000, bias=True)
+)
+model_name:efficientnet_v2_m;crop:False;random_flip:False;rotate_angle:0;random_resized_crop:False;mps
+Epoch 0/4
+----------
+phase: train
+train Loss: 3.3406 Acc: 0.4523
+phase: val
+val Loss: 3.0293 Acc: 0.7201
+epoch took: 102.33364701271057
+Epoch 1/4
+----------
+phase: train
+train Loss: 2.9484 Acc: 0.7632
+phase: val
+val Loss: 2.9107 Acc: 0.7948
+epoch took: 100.40567922592163
+Epoch 2/4
+----------
+phase: train
+train Loss: 2.8803 Acc: 0.8055
+phase: val
+val Loss: 2.8861 Acc: 0.7935
+epoch took: 98.96240210533142
+Epoch 3/4
+----------
+phase: train
+train Loss: 2.8485 Acc: 0.8319
+phase: val
+val Loss: 2.8595 Acc: 0.8234
+epoch took: 105.15238308906555
+Epoch 4/4
+----------
+phase: train
+train Loss: 2.8289 Acc: 0.8529
+phase: val
+val Loss: 2.8542 Acc: 0.8247
+epoch took: 102.55983781814575
+Training complete in 8m 30s
+Best val Acc: 0.824728
+[('./model_name:efficientnet_v2_m;crop:False;random_flip:False;rotate_angle:0;random_resized_crop:False;mps.pt', tensor(0.7772, device='mps:0')), ('./model_name:efficientnet_v2_m;crop:True;random_flip:False;rotate_angle:0;random_resized_crop:False;mps.pt', tensor(0.8030, device='mps:0')), ('./model_name:efficientnet_v2_m;crop:False;random_flip:True;rotate_angle:0;random_resized_crop:False;mps.pt', tensor(0.8125, device='mps:0')), ('./model_name:efficientnet_v2_m;crop:False;random_flip:False;rotate_angle:45;random_resized_crop:False;mps.pt', tensor(0.7826, device='mps:0')), ('./model_name:efficientnet_v2_m;crop:False;random_flip:False;rotate_angle:0;random_resized_crop:False;mps.pt', tensor(0.8247, device='mps:0'))]
