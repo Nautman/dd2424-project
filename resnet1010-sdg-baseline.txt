@@ -1,0 +1,110 @@
+Linear(in_features=2048, out_features=1000, bias=True)
+--------------------
+Training model: resnet101
+Epoch 0/14
+----------
+phase: train
+train Loss: 3.1293 Acc: 0.4429
+phase: val
+val Loss: 2.5723 Acc: 0.7962
+epoch took: 84.56439447402954
+Epoch 1/14
+----------
+phase: train
+train Loss: 2.1200 Acc: 0.8254
+phase: val
+val Loss: 1.7489 Acc: 0.8832
+epoch took: 25.091274976730347
+Epoch 2/14
+----------
+phase: train
+train Loss: 1.4497 Acc: 0.8825
+phase: val
+val Loss: 1.2421 Acc: 0.8954
+epoch took: 24.764584064483643
+Epoch 3/14
+----------
+phase: train
+train Loss: 1.0799 Acc: 0.8984
+phase: val
+val Loss: 0.9604 Acc: 0.9130
+epoch took: 25.205902338027954
+Epoch 4/14
+----------
+phase: train
+train Loss: 0.8504 Acc: 0.9117
+phase: val
+val Loss: 0.7916 Acc: 0.9198
+epoch took: 24.742483377456665
+Epoch 5/14
+----------
+phase: train
+train Loss: 0.7162 Acc: 0.9171
+phase: val
+val Loss: 0.6889 Acc: 0.9130
+epoch took: 23.369475841522217
+Epoch 6/14
+----------
+phase: train
+train Loss: 0.6236 Acc: 0.9260
+phase: val
+val Loss: 0.6178 Acc: 0.9212
+epoch took: 25.06609606742859
+Epoch 7/14
+----------
+phase: train
+train Loss: 0.5563 Acc: 0.9226
+phase: val
+val Loss: 0.5619 Acc: 0.9198
+epoch took: 23.194168090820312
+Epoch 8/14
+----------
+phase: train
+train Loss: 0.4973 Acc: 0.9375
+phase: val
+val Loss: 0.5101 Acc: 0.9198
+epoch took: 23.859259843826294
+Epoch 9/14
+----------
+phase: train
+train Loss: 0.4636 Acc: 0.9293
+phase: val
+val Loss: 0.4835 Acc: 0.9253
+epoch took: 25.168291807174683
+Epoch 10/14
+----------
+phase: train
+train Loss: 0.4361 Acc: 0.9351
+phase: val
+val Loss: 0.4623 Acc: 0.9144
+epoch took: 23.353057384490967
+Epoch 11/14
+----------
+phase: train
+train Loss: 0.4095 Acc: 0.9399
+phase: val
+val Loss: 0.4358 Acc: 0.9198
+epoch took: 23.049692392349243
+Epoch 12/14
+----------
+phase: train
+train Loss: 0.3864 Acc: 0.9402
+phase: val
+val Loss: 0.4278 Acc: 0.9226
+epoch took: 22.894829034805298
+Epoch 13/14
+----------
+phase: train
+train Loss: 0.3685 Acc: 0.9378
+phase: val
+val Loss: 0.4063 Acc: 0.9239
+epoch took: 23.46400761604309
+Epoch 14/14
+----------
+phase: train
+train Loss: 0.3486 Acc: 0.9467
+phase: val
+val Loss: 0.3927 Acc: 0.9280
+epoch took: 24.536996126174927
+Training complete in 7m 4s
+Best val Acc: 0.927989
