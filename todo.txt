@@ -1,5 +1,8 @@
-* Fix the data loading bug to get > 90% accuracy
-* Test all the configs
-* Test all the layer un-freezing (un-freezing 1, 2, 3 ... layers)
-* Test learning rates
-* Test moving avarages of batch norm
+[] Test all models again
+[] Test single layer
+[] Test all the configs
+[] Test all the layer un-freezing (un-freezing 1, 2, 3 ... layers)
+[] Write code for testing learning rates
+[] Test learning rates
+[] Write code for moving avarages
+[] Test moving avarages of batch norm
