@@ -1,0 +1,179 @@
+Linear(in_features=2048, out_features=1000, bias=True)
+Epoch 0/24
+----------
+phase: train
+train Loss: 3.0531 Acc: 0.4538
+phase: val
+val Loss: 2.1617 Acc: 0.8139
+epoch took: 30.785892724990845
+Epoch 1/24
+----------
+phase: train
+train Loss: 1.2742 Acc: 0.8573
+phase: val
+val Loss: 0.5730 Acc: 0.9117
+epoch took: 30.562703847885132
+Epoch 2/24
+----------
+phase: train
+train Loss: 0.4765 Acc: 0.9192
+phase: val
+val Loss: 0.3464 Acc: 0.9293
+epoch took: 30.896536588668823
+Epoch 3/24
+----------
+phase: train
+train Loss: 0.2875 Acc: 0.9446
+phase: val
+val Loss: 0.2576 Acc: 0.9389
+epoch took: 30.87441611289978
+Epoch 4/24
+----------
+phase: train
+train Loss: 0.2152 Acc: 0.9504
+phase: val
+val Loss: 0.2329 Acc: 0.9348
+epoch took: 29.107799530029297
+Epoch 5/24
+----------
+phase: train
+train Loss: 0.1563 Acc: 0.9701
+phase: val
+val Loss: 0.2181 Acc: 0.9334
+epoch took: 29.12561559677124
+Epoch 6/24
+----------
+phase: train
+train Loss: 0.1208 Acc: 0.9755
+phase: val
+val Loss: 0.2029 Acc: 0.9429
+epoch took: 30.926167964935303
+Epoch 7/24
+----------
+phase: train
+train Loss: 0.0951 Acc: 0.9817
+phase: val
+val Loss: 0.1888 Acc: 0.9443
+epoch took: 30.830514430999756
+Epoch 8/24
+----------
+phase: train
+train Loss: 0.0812 Acc: 0.9874
+phase: val
+val Loss: 0.1861 Acc: 0.9457
+epoch took: 30.93523669242859
+Epoch 9/24
+----------
+phase: train
+train Loss: 0.0654 Acc: 0.9918
+phase: val
+val Loss: 0.1914 Acc: 0.9375
+epoch took: 29.11411690711975
+Epoch 10/24
+----------
+phase: train
+train Loss: 0.0592 Acc: 0.9918
+phase: val
+val Loss: 0.1882 Acc: 0.9416
+epoch took: 29.24053430557251
+Epoch 11/24
+----------
+phase: train
+train Loss: 0.0471 Acc: 0.9939
+phase: val
+val Loss: 0.1866 Acc: 0.9416
+epoch took: 29.29778289794922
+Epoch 12/24
+----------
+phase: train
+train Loss: 0.0409 Acc: 0.9952
+phase: val
+val Loss: 0.1834 Acc: 0.9443
+epoch took: 28.800534963607788
+Epoch 13/24
+----------
+phase: train
+train Loss: 0.0349 Acc: 0.9969
+phase: val
+val Loss: 0.1879 Acc: 0.9375
+epoch took: 29.50881338119507
+Epoch 14/24
+----------
+phase: train
+train Loss: 0.0291 Acc: 0.9959
+phase: val
+val Loss: 0.1861 Acc: 0.9443
+epoch took: 28.909674644470215
+Epoch 15/24
+----------
+phase: train
+train Loss: 0.0278 Acc: 0.9973
+phase: val
+val Loss: 0.1818 Acc: 0.9457
+epoch took: 29.327728986740112
+Epoch 16/24
+----------
+phase: train
+train Loss: 0.0261 Acc: 0.9973
+phase: val
+val Loss: 0.1777 Acc: 0.9457
+epoch took: 28.88428568840027
+Epoch 17/24
+----------
+phase: train
+train Loss: 0.0239 Acc: 0.9990
+phase: val
+val Loss: 0.1862 Acc: 0.9429
+epoch took: 29.170904397964478
+Epoch 18/24
+----------
+phase: train
+train Loss: 0.0208 Acc: 0.9983
+phase: val
+val Loss: 0.1829 Acc: 0.9402
+epoch took: 29.034406661987305
+Epoch 19/24
+----------
+phase: train
+train Loss: 0.0191 Acc: 0.9990
+phase: val
+val Loss: 0.1881 Acc: 0.9416
+epoch took: 29.078330755233765
+Epoch 20/24
+----------
+phase: train
+train Loss: 0.0169 Acc: 0.9990
+phase: val
+val Loss: 0.1860 Acc: 0.9402
+epoch took: 29.107124090194702
+Epoch 21/24
+----------
+phase: train
+train Loss: 0.0145 Acc: 0.9993
+phase: val
+val Loss: 0.1806 Acc: 0.9429
+epoch took: 28.96166467666626
+Epoch 22/24
+----------
+phase: train
+train Loss: 0.0171 Acc: 0.9986
+phase: val
+val Loss: 0.1890 Acc: 0.9443
+epoch took: 29.004408359527588
+Epoch 23/24
+----------
+phase: train
+train Loss: 0.0142 Acc: 0.9990
+phase: val
+val Loss: 0.1847 Acc: 0.9429
+epoch took: 28.86707878112793
+Epoch 24/24
+----------
+phase: train
+train Loss: 0.0131 Acc: 0.9993
+phase: val
+val Loss: 0.1779 Acc: 0.9429
+epoch took: 29.147987365722656
+Training complete in 12m 20s
+Best val Acc: 0.945652
+Best acc for final model:  tensor(0.9457, device='cuda:0')

@@ -1,0 +1,88 @@
+training model with 2 unfrozen layers
+Epoch 0/11
+----------
+phase: train
+train Loss: 3.1476 Acc: 0.4100
+phase: val
+val Loss: 2.5921 Acc: 0.7690
+epoch took: 24.388060808181763
+Epoch 1/11
+----------
+phase: train
+train Loss: 2.1331 Acc: 0.8268
+phase: val
+val Loss: 1.7601 Acc: 0.8777
+epoch took: 23.98031735420227
+Epoch 2/11
+----------
+phase: train
+train Loss: 1.4601 Acc: 0.8842
+phase: val
+val Loss: 1.2613 Acc: 0.8927
+epoch took: 24.40851593017578
+Epoch 3/11
+----------
+phase: train
+train Loss: 1.0802 Acc: 0.9032
+phase: val
+val Loss: 0.9824 Acc: 0.9008
+epoch took: 24.004048347473145
+Epoch 4/11
+----------
+phase: train
+train Loss: 0.8533 Acc: 0.9151
+phase: val
+val Loss: 0.7882 Acc: 0.9130
+epoch took: 24.31809425354004
+Epoch 5/11
+----------
+phase: train
+train Loss: 0.7219 Acc: 0.9229
+phase: val
+val Loss: 0.6915 Acc: 0.9103
+epoch took: 22.651297569274902
+Epoch 6/11
+----------
+phase: train
+train Loss: 0.6282 Acc: 0.9236
+phase: val
+val Loss: 0.6219 Acc: 0.9144
+epoch took: 23.930816650390625
+Epoch 7/11
+----------
+phase: train
+train Loss: 0.5570 Acc: 0.9253
+phase: val
+val Loss: 0.5588 Acc: 0.9212
+epoch took: 24.44241952896118
+Epoch 8/11
+----------
+phase: train
+train Loss: 0.5164 Acc: 0.9280
+phase: val
+val Loss: 0.5265 Acc: 0.9198
+epoch took: 22.330965518951416
+Epoch 9/11
+----------
+phase: train
+train Loss: 0.4655 Acc: 0.9355
+phase: val
+val Loss: 0.4824 Acc: 0.9253
+epoch took: 23.86757755279541
+Epoch 10/11
+----------
+phase: train
+train Loss: 0.4381 Acc: 0.9348
+phase: val
+val Loss: 0.4598 Acc: 0.9212
+epoch took: 22.831090211868286
+Epoch 11/11
+----------
+phase: train
+train Loss: 0.4102 Acc: 0.9399
+phase: val
+val Loss: 0.4491 Acc: 0.9185
+epoch took: 22.378400325775146
+Training complete in 4m 45s
+Best val Acc: 0.925272
+Linear(in_features=2048, out_features=1000, bias=True)
